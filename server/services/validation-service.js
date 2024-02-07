@@ -71,6 +71,5 @@ export const validateUpdatePayload = async(req,res,next) =>{
         return res.status(400).send();
     }
     req.body.password = await generateHash(password);
-    req.body.account_updated = new Date().toISOString();
     next();
 }

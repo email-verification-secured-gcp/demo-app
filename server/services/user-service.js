@@ -42,6 +42,7 @@ const isUsernameTaken = async (username) => {
       {
         data[key] = updatedUserData[key];
       }
+      data.account_updated=new Date().toISOString();
       const [updatedRows,count] = await User.update(data, {
         where: { username: username },
         returning: true,
