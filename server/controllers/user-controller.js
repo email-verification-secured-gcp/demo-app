@@ -8,7 +8,7 @@ export const getUser = async (req, res) => {
       const user = await getUserByUsername(name);
       if (user) {
         delete user.password;
-        res.status(204).send();
+        res.status(200).send(user);
       } else {
         res.status(400).json({ message: 'User not found' });
       }
