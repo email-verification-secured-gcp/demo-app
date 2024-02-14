@@ -36,6 +36,12 @@ jobs:
         echo "PASSWORD=${{ secrets.PASSWORD }}" >> secrets/secrets.env
         echo "DATABASE=${{ secrets.DATABASE }}" >> secrets/secrets.env
         echo "HOST=${{ secrets.HOST }}" >> secrets/secrets.env
+    
+    - name: Echo env variables
+      run: |
+        echo $MYSQL_ROOT_PASSWORD
+        echo $USERNAME
+        ls -l
 
     - name: Create MySQL user and database
       run: |
