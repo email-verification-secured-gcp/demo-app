@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenv, { config } from 'dotenv';
 import path from 'path';
 dotenv.config({ path: path.resolve( `./secrets/secrets.env`) });
 export const dbConfig ={
@@ -7,3 +7,5 @@ export const dbConfig ={
     PASSWORD: process.env.PASSWORD,
     DATABASE: process.env.DATABASE
 }
+
+console.log(dbConfig);
