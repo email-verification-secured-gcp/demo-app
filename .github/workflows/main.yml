@@ -9,7 +9,8 @@ jobs:
   build:
     name: CI
     runs-on: ubuntu-latest
-
+    env:
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -42,10 +43,10 @@ jobs:
 
     - name: Create MySQL users and database
       run: |
-        sudo mysql -u root -proot -e "CREATE USER '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_PASSWORD';"
-        sudo mysql -u root -proot -e "CREATE DATABASE $DB_NAME;"
-        sudo mysql -u root -proot -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$DB_HOST';"
-        sudo mysql -u root -proot -e "FLUSH PRIVILEGES;"
+        sudo mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "CREATE USER '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_PASSWORD';"
+        sudo mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "CREATE DATABASE $DB_NAME;"
+        sudo mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$DB_HOST';"
+        sudo mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "FLUSH PRIVILEGES;"
       
     - name: Setup Node.js
       uses: actions/setup-node@v2
@@ -55,5 +56,10 @@ jobs:
     - name: Install dependencies
       run: npm install
     
+    - name: Start the application
+      run: |
+        npm start &
+        wait-on http://localhost:3000
+        
     - name: run test
       run: npm test
