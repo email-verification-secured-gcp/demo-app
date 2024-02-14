@@ -39,9 +39,7 @@ jobs:
     
     - name: Echo env variables
       run: |
-        echo $MYSQL_ROOT_PASSWORD
-        echo $USERNAME
-        ls -l
+        echo $GITHUB_ENV
 
     - name: Create MySQL user and database
       run: |
