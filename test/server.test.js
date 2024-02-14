@@ -4,13 +4,13 @@ const  baseURL = 'http://localhost:3000';
 
 const client = axios.create({
     baseURL,
-    validateStatus: () => true, // Accept all status codes, customize as needed
+    validateStatus: () => true, 
   });
 
 
   describe('/v1/user post,get,put',  () => {
 
-    it('should create an account and validate it exists', async () => {
+    it('create account and verify', async () => {
 
         const token = Buffer.from(`shoba123@gmail.com:abc1`, 'utf8').toString('base64')
         const response = await client.post('/v1/user', {
@@ -31,7 +31,7 @@ const client = axios.create({
         expect(res.data).toHaveProperty('username');
       });
 
-     it('should update an account and validate it updated', async () => {
+     it(' update account and validate', async () => {
         const token = Buffer.from(`shoba123@gmail.com:abc1`, 'utf8').toString('base64')
         const response = await client.put('/v1/user/self', {
             "first_name": "Jack",
