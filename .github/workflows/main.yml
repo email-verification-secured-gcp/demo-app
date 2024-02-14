@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      MYSQL_ROOT_PASSWORD: ${{ secrets.ROOT_PASSWORD }}
+      MYSQL_ROOT_PASSWORD: Mad987@#
 
     steps:
     - name: Checkout code
@@ -45,7 +45,7 @@ jobs:
         echo "DB_NAME: $DB_NAME"
         echo "DB_HOST: $DB_HOST"
 
-    - name: Create MySQL user and database
+    - name: Create MySQL users and database
       run: |
         mysql -u root -p Mad987@# -e "CREATE USER '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_PASSWORD';"
         mysql -u root -p Mad987@# -e "CREATE DATABASE $DB_NAME;"
