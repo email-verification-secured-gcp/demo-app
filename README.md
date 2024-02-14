@@ -6,11 +6,11 @@ show databases;
 
 create database cloud;
 
-CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'dada'@'localhost' IDENTIFIED BY 'Mad987@#';
 
-GRANT ALL PRIVILEGES ON cloud.* TO 'user'@'localhost';
+GRANT ALL PRIVILEGES ON cloud.* TO 'dada'@'localhost';
 
-SHOW GRANTS FOR 'user'@'localhost';
+SHOW GRANTS FOR 'dada'@'localhost';
 
 DROP USER 'user'@'localhost';
 
