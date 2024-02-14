@@ -13,6 +13,32 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    
+    - name: Set up MySQL server
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mysql-server
+
+    - name: Start MySQL service
+      run: sudo service mysql start
+    
+    - name: Set up environment variables
+      run: |
+        echo "DB_USER=${{ secrets.USERNAME }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_NAME=${{ secrets.DATABASE }}" >> $GITHUB_ENV
+        echo "DB_HOST=${{ secrets.HOST }}" >> $GITHUB_ENV
+        echo "USERNAME=${{ secrets.USERNAME}}" > secrets/secrets.env
+        echo "PASSWORD=${{ secrets.PASSWORD }}" >> secrets/secrets.env
+        echo "DATABASE=${{ secrets.DATABASE }}" >> secrets/secrets.env
+        echo "HOST=${{ secrets.HOST }}" >> secrets/secrets.env
+
+    - name: Create MySQL user and database
+      run: |
+        sudo mysql -e "CREATE USER '$DB_USER'@'DB_HOST' IDENTIFIED BY '$DB_PASSWORD';"
+        sudo mysql -e "CREATE DATABASE $DB_NAME;"
+        sudo mysql -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'DB_HOST';"
+        sudo mysql -e "FLUSH PRIVILEGES;"
       
     - name: Setup Node.js
       uses: actions/setup-node@v2
