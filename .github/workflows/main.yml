@@ -56,7 +56,13 @@ jobs:
     - name: Start the application
       run: |
         npm start &
-        wait-on http://localhost:3000
+    
+    - name: Wait for the application to be ready
+      run: |
+        sleep 10
+        until curl -s http://localhost:3000; do
+          sleep 5
+        done
 
     - name: run test
       run: npm test
