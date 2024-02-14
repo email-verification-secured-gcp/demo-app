@@ -7,5 +7,3 @@ export const dbConfig ={
     PASSWORD: process.env.PASSWORD,
     DATABASE: process.env.DATABASE
 }
-
-console.log(dbConfig);

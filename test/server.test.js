@@ -23,13 +23,12 @@ const client = axios.create({
         expect(response.data).toHaveProperty('username');
         userId = response.data.userId;        
         const res = await client.get('/v1/user/self',{
-            Headers:{
+            headers:{
                 'Authorization': `Basic ${token}`
             }
         });
-        console.log(res);
-        expect(response.status).toBe(201);
-        expect(response.data).toHaveProperty('username');
+        expect(res.status).toBe(200);
+        expect(res.data).toHaveProperty('username');
       });
 
      it('should update an account and validate it updated', async () => {
@@ -50,7 +49,6 @@ const client = axios.create({
                 'Authorization': `Basic ${token}`
             }
         });
-        console.log(res);
         expect(res.status).toBe(200);
         expect(res.data).toHaveProperty('first_name', 'Jack');
         expect(res.data).toHaveProperty('last_name', 'Sparrow');
