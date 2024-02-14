@@ -22,6 +22,9 @@ jobs:
     - name: Start MySQL service
       run: sudo service mysql start
     
+    - name: Create secrets directory
+      run: mkdir -p secrets
+    
     - name: Set up environment variables
       run: |
         echo "DB_USER=${{ secrets.USERNAME }}" >> $GITHUB_ENV
