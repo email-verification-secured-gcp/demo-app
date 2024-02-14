@@ -17,10 +17,10 @@ jobs:
     - name: Set up MySQL server
       run: |
         sudo apt-get update
-        sudo apt-get install -y mysql-server
-
-    - name: Start MySQL service
-      run: sudo service mysql start
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
+        sudo service mysql start
+        sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
+        sudo mysql -e "FLUSH PRIVILEGES;"
     
     - name: Create secrets directory
       run: mkdir -p secrets
@@ -38,10 +38,10 @@ jobs:
 
     - name: Create MySQL user and database
       run: |
-        sudo mysql -e "CREATE USER '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_PASSWORD';"
-        sudo mysql -e "CREATE DATABASE $DB_NAME;"
-        sudo mysql -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$DB_HOST';"
-        sudo mysql -e "FLUSH PRIVILEGES;"
+        mysql -u root -e "CREATE USER '$DB_USER'@'$DB_HOST' IDENTIFIED BY '$DB_PASSWORD';"
+        mysql -u root -e "CREATE DATABASE $DB_NAME;"
+        mysql -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'$DB_HOST';"
+        mysql -u root -e "FLUSH PRIVILEGES;"
       
     - name: Setup Node.js
       uses: actions/setup-node@v2
