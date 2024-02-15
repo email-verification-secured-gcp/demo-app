@@ -1,0 +1,68 @@
+name: integration test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: CI
+    runs-on: ubuntu-latest
+    env:
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Set up MySQL server
+      run: |
+        sudo systemctl start mysql
+        sudo systemctl status mysql
+    
+    - name: Create secrets directory
+      run: mkdir -p secrets
+    
+    - name: Set up environment variables
+      run: |
+        echo "DB_USER=${{ secrets.USERNAME }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_NAME=${{ secrets.DATABASE }}" >> $GITHUB_ENV
+        echo "DB_HOST=${{ secrets.HOST }}" >> $GITHUB_ENV
+        echo "USERNAME=${{ secrets.USERNAME}}" > secrets/secrets.env
+        echo "PASSWORD=${{ secrets.PASSWORD }}" >> secrets/secrets.env
+        echo "DATABASE=${{ secrets.DATABASE }}" >> secrets/secrets.env
+        echo "HOST=${{ secrets.HOST }}" >> secrets/secrets.env
+    
+    - name: Echo env variables
+      run: |
+        echo "DB_USER: $DB_USER"
+        echo "DB_PASSWORD: $DB_PASSWORD"
+        echo "DB_NAME: $DB_NAME"
+        echo "DB_HOST: $DB_HOST"
+
+    - name: Create MySQL  database
+      run: |
+        sudo mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "CREATE DATABASE $DB_NAME;"
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 20 
+
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Start the application
+      run: |
+        npm start &
+    
+    - name: Wait for the application to be ready
+      run: |
+        sleep 10
+        until curl -s http://localhost:3000; do
+          sleep 5
+        done
+
+    - name: run test
+      run: npm test

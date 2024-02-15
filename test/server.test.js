@@ -31,7 +31,7 @@ const client = axios.create({
         expect(res.data).toHaveProperty('username');
       });
 
-     it(' update account and validate', async () => {
+     it('update account and validate it updated', async () => {
         const token = Buffer.from(`shoba123@gmail.com:abc1`, 'utf8').toString('base64')
         const response = await client.put('/v1/user/self', {
             "first_name": "Jack",
