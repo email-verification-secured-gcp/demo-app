@@ -82,6 +82,7 @@ SHOW GRANTS FOR 'user'@'localhost';
 DROP USER 'user'@'localhost';
 
 FLUSH PRIVILEGES;
+```
 
 4. **Start application**
 
