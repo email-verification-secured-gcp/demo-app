@@ -67,7 +67,6 @@ jobs:
     - name: stop MySQL server
       run: |
         sudo systemctl stop mysql
-        sudo systemctl status mysql
 
     - name: run test
       run: npm test
