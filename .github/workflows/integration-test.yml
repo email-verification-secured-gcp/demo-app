@@ -63,6 +63,11 @@ jobs:
         until curl -s http://localhost:3000; do
           sleep 5
         done
+        
+    - name: stop MySQL server
+      run: |
+        sudo systemctl stop mysql
+        sudo systemctl status mysql
 
     - name: run test
       run: npm test
