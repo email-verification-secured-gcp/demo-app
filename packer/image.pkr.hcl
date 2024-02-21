@@ -29,9 +29,13 @@ variable DB_PASSWORD {
   default = env("DB_PASSWORD")
 }
 
+locals {
+timestamp = regex_replace(formatdate("YYYY-MM-DD-hh-mm-ss", timestamp()), "[- TZ:]", "")
+}
+
 variable "image_name" {
   type    = string
-  default = "web-app-${shell("date -u '+%Y-%m-%d-%H-%M-%S'")}"
+  default = "web-app"
 }
 
 variable "image_family" {
@@ -57,7 +61,7 @@ packer {
 source "googlecompute" "custom-image" {
   project_id          = var.project
   source_image_family = var.source_image
-  image_name          = var.image_name
+  image_name          = "${var.image_name}-${local.timestamp}"
   image_family        = var.image_family
   ssh_username        = var.ssh_username
   zone                = var.zone
