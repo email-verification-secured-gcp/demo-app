@@ -6,12 +6,13 @@ on:
       - main
 env:
   PRODUCT_VERSION: "latest"
-  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
   
 jobs:
   build:
     name: CI
     runs-on: ubuntu-latest
+    env:
+      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
       
     
     steps:
@@ -46,7 +47,7 @@ jobs:
 
     - name: Create MySQL  database
       run: |
-         sudo mysql -u root -p`${MYSQL_ROOT_PASSWORD}` -e "CREATE DATABASE ${DB_NAME};"
+         sudo mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "CREATE DATABASE $DB_NAME;"
       
     - name: Setup Node.js
       uses: actions/setup-node@v2
