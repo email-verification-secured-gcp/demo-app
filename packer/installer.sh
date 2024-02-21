@@ -8,9 +8,9 @@ sudo dnf -y install nodejs
 sudo dnf -y install mysql-server
 sudo systemctl enable mysqld
 sudo systemctl start mysqld
-sudo mysqladmin -u root password 'Mad987@#'
+sudo mysqladmin -u root password '${DB_PASSWORD}'
 
-mysql -u root -pMad987@# -e "CREATE DATABASE IF NOT EXISTS cloud;"
+mysql -u root -p"${DB_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS cloud;"
 
 # Install unzip
 sudo dnf -y install unzip
