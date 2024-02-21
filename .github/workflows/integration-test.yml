@@ -25,7 +25,6 @@ jobs:
       with:
           version: ${{ env.PRODUCT_VERSION }}
 
-    
     - name: Set up MySQL server
       run: |
         sudo systemctl start mysql
@@ -74,7 +73,7 @@ jobs:
     - name: create artifact
       run: |
         zip -r webapp.zip ./
-        
+
     - name: Initialize Packer
       run: packer init packer/image.pkr.hcl
     
