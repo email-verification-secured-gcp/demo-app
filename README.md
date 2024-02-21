@@ -1,6 +1,6 @@
 # Web Application for Node.js and MySQL
 
-This web application is a RESTful API built with Node.js and MySQL. The API adheres to certain standards and follows specific requirements outlined below.
+This web application is a RESTful API built with Node.js and MySQL. The API adheres to certain standards and follows, specific requirements outlined below.
 
 ## RESTful API Requirements
 
