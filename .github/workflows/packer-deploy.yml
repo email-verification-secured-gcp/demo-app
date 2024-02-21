@@ -51,10 +51,10 @@ jobs:
 
     - name: Create MySQL  database
       run: |
-        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE DATABASE IF NOT EXISTS \`$DATABASE\`;"
-        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE USER '$USERNAME'@'localhost' IDENTIFIED BY '$PASSWORD';"
-        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "GRANT ALL PRIVILEGES ON \`$DATABASE\`.* TO '$USERNAME'@'localhost';"
-        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "FLUSH PRIVILEGES;"
+        sudo mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS cloud;"
+        sudo mysql -u root -proot -e "CREATE USER 'dada'@'localhost' IDENTIFIED BY 'Mad987@#';"
+        sudo mysql -u root -proot -e "GRANT ALL PRIVILEGES ON 'cloud'.* TO 'dada'@'localhost';"
+        sudo mysql -u root -proot -e "FLUSH PRIVILEGES;"
         sudo mysql -u dada -pMad987@# -e "use cloud;"
       env:
         DATABASE: ${{ secrets.DATABASE }}
