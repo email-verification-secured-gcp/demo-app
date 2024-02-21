@@ -1,0 +1,15 @@
+[Unit]
+Description=Your Node.js Application
+After=network.target 
+ 
+[Service]
+Type=simple
+User=csye6225
+Group=csye6225
+ExecStart= /usr/bin/node /opt/webapp/server/index.js
+Restart=always
+WorkingDirectory=/opt/webapp/
+RestartSec=10
+ 
+[Install]
+WantedBy=multi-user.target
