@@ -19,6 +19,16 @@ variable "ssh_username" {
   default = "packer"
 }
 
+variable DB_USER {
+  type    = string
+  default = env("DB_USER")
+}
+ 
+variable DB_PASSWORD {
+  type    = string
+  default = env("DB_PASSWORD")
+}
+
 variable "image_name" {
   type    = string
   default = "web-app"
@@ -69,6 +79,10 @@ build {
   provisioner "shell" {
     scripts          = ["./packer/installer.sh", "./packer/create-user.sh", "./packer/startserver.sh"]
     valid_exit_codes = [0, 2300218]
+    environment_vars = [
+      "DB_USER=${var.DB_USER}",
+      "DB_PASSWORD=${var.DB_PASSWORD}"
+    ]
   }
 }
 
