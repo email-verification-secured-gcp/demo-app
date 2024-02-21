@@ -105,5 +105,6 @@ jobs:
     - name: Deploy packer image
       env:
          DB_PASSWORD: ${{ secrets.PASSWORD }}
+         DB_USER: ${{secrets.USERNAME}}     
       run: |
           packer build packer/image.pkr.hcl
