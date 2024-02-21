@@ -4,16 +4,26 @@ on:
   pull_request:
     branches:
       - main
-
+env:
+  PRODUCT_VERSION: "latest"
+  MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+  
 jobs:
   build:
     name: CI
     runs-on: ubuntu-latest
-    env:
-      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    
+    - name: Setup `packer`
+      uses: hashicorp/setup-packer@main
+      id: setup
+      with:
+          version: ${{ env.PRODUCT_VERSION }}
+
     
     - name: Set up MySQL server
       run: |
