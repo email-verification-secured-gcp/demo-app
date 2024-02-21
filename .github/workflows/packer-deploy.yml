@@ -25,21 +25,10 @@ jobs:
     
     - name: Set up environment variables
       run: |
-        echo "DB_USER=${{ secrets.USERNAME }}" >> $GITHUB_ENV
-        echo "DB_PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
-        echo "DB_NAME=${{ secrets.DATABASE }}" >> $GITHUB_ENV
-        echo "DB_HOST=${{ secrets.HOST }}" >> $GITHUB_ENV
         echo "USERNAME=${{ secrets.USERNAME}}" > secrets/secrets.env
         echo "PASSWORD=${{ secrets.PASSWORD }}" >> secrets/secrets.env
         echo "DATABASE=${{ secrets.DATABASE }}" >> secrets/secrets.env
         echo "HOST=${{ secrets.HOST }}" >> secrets/secrets.env
-    
-    - name: Echo env variables
-      run: |
-        echo "DB_USER: $DB_USER"
-        echo "DB_PASSWORD: $DB_PASSWORD"
-        echo "DB_NAME: $DB_NAME"
-        echo "DB_HOST: $DB_HOST"
 
     - name: Create MySQL  database
       run: |
@@ -82,4 +71,19 @@ jobs:
 
     - name: Validate Packer Template
       run: packer validate packer/image.pkr.hcl
-
+    
+    - name: create artifact
+      run: |
+        zip -r webapp.zip ./
+    - name: Set environment variables and create secrets.json
+      env:
+        GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+      run: |
+       echo "${GCP_SERVICE_ACCOUNT_JSON}" > secrets.json
+       
+    - name: Deploy packer image
+      env:
+         GOOGLE_APPLICATION_CREDENTIALS : ./secrets.json
+         DB_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+      run: |
+          packer build packer/image.pkr.hcl
