@@ -14,7 +14,16 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    
+
+    - name: GCloud authentication      
+      id: 'auth'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v2'
+
     - name: Setup `packer`
       uses: hashicorp/setup-packer@main
       id: setup
@@ -69,7 +78,7 @@ jobs:
     - name: create artifact
       run: |
         zip -r webapp.zip ./
-        
+
     - name: Initialize Packer
       run: packer init packer/image.pkr.hcl
     
@@ -84,15 +93,8 @@ jobs:
       run: packer validate packer/image.pkr.hcl
     
 
-    - name: Set environment variables and create secrets.json
-      env:
-        GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
-      run: |
-       echo "${GCP_SERVICE_ACCOUNT_JSON}" > secrets.json
-
     - name: Deploy packer image
       env:
-         GOOGLE_APPLICATION_CREDENTIALS : ./secrets.json
          DB_PASSWORD: ${{ secrets.PASSWORD }}
       run: |
           packer build packer/image.pkr.hcl
