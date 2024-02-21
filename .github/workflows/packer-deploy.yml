@@ -1,4 +1,4 @@
-name: integration test
+name: packer deployment
 
 on:
   pull_request:
@@ -38,7 +38,7 @@ jobs:
 
     - name: Create MySQL  database
       run: |
-        sudo mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "CREATE DATABASE $DB_NAME;"
+        sudo mysql -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE $DB_NAME;"
       
     - name: Setup Node.js
       uses: actions/setup-node@v2
