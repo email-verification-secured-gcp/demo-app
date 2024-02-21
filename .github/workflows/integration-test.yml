@@ -46,10 +46,14 @@ jobs:
 
     - name: Create MySQL  database
       run: |
-        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE DATABASE ${{ secrets.DATABASE }};"
-        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE USER '${{ secrets.USERNAME}}'@'localhost' IDENTIFIED BY '${{secrets.PASSWORD }}' ";
-        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "GRANT ALL PRIVILEGES ON '${{ secrets.DATABASE }}'.* TO '${{secrets.USERNAME}}'@'localhost'";
-      
+        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE DATABASE IF NOT EXISTS \`$DATABASE\`;"
+        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "CREATE USER '$USERNAME'@'localhost' IDENTIFIED BY '$PASSWORD';"
+        sudo mysql -u root -p"${{ secrets.MYSQL_ROOT_PASSWORD }}" -e "GRANT ALL PRIVILEGES ON \`$DATABASE\`.* TO '$USERNAME'@'localhost';"
+      env:
+        DATABASE: ${{ secrets.DATABASE }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}    
+  
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
