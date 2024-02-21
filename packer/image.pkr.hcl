@@ -31,7 +31,7 @@ variable DB_PASSWORD {
 
 variable "image_name" {
   type    = string
-  default = "web-app"
+  default = "web-app-${formatdate("YYYY-MM-DD-hhmmss", timestamp())}"
 }
 
 variable "image_family" {
