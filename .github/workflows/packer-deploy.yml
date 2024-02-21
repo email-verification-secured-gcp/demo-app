@@ -31,6 +31,10 @@ jobs:
     
     - name: Set up environment variables
       run: |
+        echo "DB_USER=${{ secrets.USERNAME }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_NAME=${{ secrets.DATABASE }}" >> $GITHUB_ENV
+        echo "DB_HOST=${{ secrets.HOST }}" >> $GITHUB_ENV
         echo "USERNAME=${{ secrets.USERNAME}}" > secrets/secrets.env
         echo "PASSWORD=${{ secrets.PASSWORD }}" >> secrets/secrets.env
         echo "DATABASE=${{ secrets.DATABASE }}" >> secrets/secrets.env
@@ -38,7 +42,7 @@ jobs:
 
     - name: Create MySQL  database
       run: |
-        sudo mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "CREATE DATABASE ${DB_NAME};"
+        sudo mysql -u root -p`${MYSQL_ROOT_PASSWORD}` -e "CREATE DATABASE ${DB_NAME};"
       
     - name: Setup Node.js
       uses: actions/setup-node@v2
