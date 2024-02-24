@@ -23,14 +23,14 @@ variable DB_USER {
   type    = string
   default = env("DB_USER")
 }
- 
+
 variable DB_PASSWORD {
   type    = string
   default = env("DB_PASSWORD")
 }
 
 locals {
-timestamp = regex_replace(formatdate("YYYY-MM-DD-hh-mm-ss", timestamp()), "[- TZ:]", "")
+  timestamp = regex_replace(formatdate("YYYY-MM-DD-hh-mm-ss", timestamp()), "[- TZ:]", "")
 }
 
 variable "image_name" {
@@ -60,7 +60,7 @@ packer {
 }
 source "googlecompute" "custom-image" {
   project_id          = var.project
-  source_image_family =   var.source_image
+  source_image_family = var.source_image
   image_name          = "${var.image_name}-${local.timestamp}"
   image_family        = var.image_family
   ssh_username        = var.ssh_username
@@ -81,7 +81,7 @@ build {
     destination = "/tmp/node.service"
   }
   provisioner "shell" {
-    scripts          = ["./packer/installer.sh", "./packer/create-user.sh", "./packer/startserver.sh"]
+    scripts          =                           ["./packer/installer.sh", "./packer/create-user.sh", "./packer/startserver.sh"]
     valid_exit_codes = [0, 2300218]
     environment_vars = [
       "DB_USER=${var.DB_USER}",
