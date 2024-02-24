@@ -6,7 +6,6 @@ variable "profile" {
 
 variable "project" {
   type    = number
-  default = "network-cloud-002277864"
 }
 
 variable "source_image" {
