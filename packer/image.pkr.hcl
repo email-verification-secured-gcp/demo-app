@@ -60,7 +60,7 @@ packer {
 }
 source "googlecompute" "custom-image" {
   project_id          = var.project
-  source_image_family = var.source_image
+  source_image_family =   var.source_image
   image_name          = "${var.image_name}-${local.timestamp}"
   image_family        = var.image_family
   ssh_username        = var.ssh_username
