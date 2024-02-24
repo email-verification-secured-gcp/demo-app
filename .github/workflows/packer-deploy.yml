@@ -107,4 +107,4 @@ jobs:
          DB_PASSWORD: ${{ secrets.PASSWORD }}
          DB_USER: ${{secrets.USERNAME}}     
       run: |
-          packer build -var 'project_id="${{ secrets.PROJECT_ID }}"' packer/image.pkr.hcl
+          packer build -var 'project="${{ secrets.PROJECT_ID }}"' packer/image.pkr.hcl
