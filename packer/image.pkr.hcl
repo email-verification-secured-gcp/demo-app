@@ -5,7 +5,7 @@ variable "profile" {
 }
 
 variable "project" {
-  type    = string
+  type    = number
   default = "network-cloud-002277864"
 }
 
@@ -81,7 +81,7 @@ build {
     destination = "/tmp/node.service"
   }
   provisioner "shell" {
-    scripts          =                           ["./packer/installer.sh", "./packer/create-user.sh", "./packer/startserver.sh"]
+    scripts          =            ["./packer/installer.sh", "./packer/create-user.sh", "./packer/startserver.sh"]
     valid_exit_codes = [0, 2300218]
     environment_vars = [
       "DB_USER=${var.DB_USER}",
