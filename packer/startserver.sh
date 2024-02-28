@@ -6,5 +6,3 @@ sudo systemctl daemon-reload
 
 echo "start the webapp"
 sudo systemctl enable node
-sudo systemctl start node
-sudo systemctl restart node
