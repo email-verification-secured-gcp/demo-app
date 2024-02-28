@@ -6,8 +6,7 @@ After=network.target
 Type=simple
 User=csye6225
 Group=csye6225
-ExecStartPre
-ExecStartPre=sh /opt/webapp/startup.sh
+ExecStartPre= sh /opt/webapp/startup.sh
 ExecStart= /usr/bin/node /opt/webapp/server/index.js
 Restart=always
 WorkingDirectory=/opt/webapp/
