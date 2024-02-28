@@ -95,7 +95,7 @@ jobs:
     
     - name: Check Formatting
       run: |
-        if !packer fmt -check packer/image.pkr.hcl; then
+        if ! packer fmt -check packer/image.pkr.hcl; then
           echo "Invalid packer format"
           exit 1
         fi
