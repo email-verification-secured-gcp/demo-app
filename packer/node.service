@@ -10,7 +10,7 @@ ExecStartPre= sh /opt/webapp/startup.sh
 ExecStart= /usr/bin/node /opt/webapp/server/index.js
 Restart=always
 WorkingDirectory=/opt/webapp/
-RestartSec=10
+RestartSec=50
  
 [Install]
 WantedBy=multi-user.target
