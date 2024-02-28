@@ -80,6 +80,11 @@ build {
     source      = "./packer/node.service"
     destination = "/tmp/node.service"
   }
+
+   provisioner "file" {
+    source      = "./packer/verifystart.sh"
+    destination = "/tmp/verifystart.sh"
+  }
   provisioner "shell" {
     scripts          = ["./packer/installer.sh", "./packer/create-user.sh", "./packer/startserver.sh"]
     valid_exit_codes = [0, 2300218]
