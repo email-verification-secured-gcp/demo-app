@@ -35,8 +35,9 @@ jobs:
         sudo systemctl start mysql
         sudo systemctl status mysql
     
-    - name: Create secrets directory
-      run: mkdir -p secrets
+    - name: create artifact
+      run: |
+        zip -r webapp.zip ./
     
     - name: Set up environment variables
       run: |
@@ -65,9 +66,6 @@ jobs:
       with:
         node-version: 20 
     
-    - name: create artifact
-      run: |
-        zip -r webapp.zip ./
         
     - name: Install dependencies
       run: npm install
@@ -85,8 +83,6 @@ jobs:
 
     - name: run test
       run: npm test
-
-
 
     - name: Initialize Packer
       run: packer init packer/image.pkr.hcl
