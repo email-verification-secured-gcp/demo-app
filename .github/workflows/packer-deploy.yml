@@ -1,7 +1,7 @@
 name: packer deployment
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
