@@ -23,14 +23,14 @@ variable DB_USER {
   type    = string
   default = env("DB_USER")
 }
- 
+
 variable DB_PASSWORD {
   type    = string
   default = env("DB_PASSWORD")
 }
 
 locals {
-timestamp = regex_replace(formatdate("YYYY-MM-DD-hh-mm-ss", timestamp()), "[- TZ:]", "")
+  timestamp = regex_replace(formatdate("YYYY-MM-DD-hh-mm-ss", timestamp()), "[- TZ:]", "")
 }
 
 variable "image_name" {
@@ -81,7 +81,7 @@ build {
     destination = "/tmp/node.service"
   }
 
-   provisioner "file" {
+  provisioner "file" {
     source      = "./packer/verifystart.sh"
     destination = "/tmp/verifystart.sh"
   }
