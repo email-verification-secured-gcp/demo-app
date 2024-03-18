@@ -2,6 +2,8 @@ import basicAuth from "basic-auth";
 import User from '../models/User.js';
 import { v4 as uuidv4 } from 'uuid';
 import { comparePassword, generateHash, isValidEmail } from '../utilities/util.js'
+import Logger from 'node-json-logger';
+const logger = new Logger();
 
 
 export const  isVerifiedUser = async (req, res, next) => {
@@ -9,6 +11,7 @@ export const  isVerifiedUser = async (req, res, next) => {
     const credentials = await basicAuth(req);
     try {
         if (!credentials || ! await check(credentials.name, credentials.pass)) {
+            logger.error("Invalid user",credentials.name);
             res.status(401).send();
         }
         else {
@@ -34,7 +37,7 @@ async function check(username, password) {
         }
 
     } catch (error) {
-        console.error('Error checking user credentials:', error);
+        logger.error('Error checking user credentials:', error);
         throw error;
     }
 
@@ -43,6 +46,7 @@ async function check(username, password) {
 export const validateUserInput = async (req, res, next) => {
     const { first_name, last_name, password, username } = req.body;
     if (!first_name || !last_name || !password || !username ||  !isValidEmail(username)) {
+        logger.error("Invalid user input sent",req.body);
         return res.status(400).send();
     }
 
@@ -57,6 +61,7 @@ export const validateUserInput = async (req, res, next) => {
 export const validatePayload = async (req, res, next) => {
 
     if (Object.keys(req.body).length > 0 || Object.keys(req.query).length > 0) {
+        logger.error("Invalid user input sent",req.body);
         res.status(400).send();
     }
     next();
@@ -68,6 +73,7 @@ export const validateUpdatePayload = async(req,res,next) =>{
     const { first_name, last_name, password } = req.body;
 
     if (Object.keys(req.body).length>3 || !first_name || !last_name || !password ) {
+        logger.error("Invalid user input sent",req.body);
         return res.status(400).send();
     }
     req.body.password = await generateHash(password);
