@@ -10,6 +10,7 @@ ExecStartPre= sh /opt/webapp/verifystart.sh
 ExecStart= /usr/bin/node /opt/webapp/server/index.js
 Restart=always
 WorkingDirectory=/opt/webapp/
+StandardOutput=/var/log/webapp.log
 RestartSec=50
  
 [Install]
