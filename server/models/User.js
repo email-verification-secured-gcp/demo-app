@@ -1,5 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import sequelize from '../database/config.js';
+import Logger from 'node-json-logger';
+const logger = new Logger();
 
 
 const User = sequelize.define('User', {
@@ -43,10 +45,10 @@ const User = sequelize.define('User', {
 
   sequelize.sync()
   .then(() => {
-    console.log('syncronize with database');
+    logger.info('syncronize with database');
   })
   .catch((error) => {
-    console.error(error);
+    logger.error(error);
   });
 
 export default User;
