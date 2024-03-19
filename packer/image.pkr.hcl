@@ -85,12 +85,12 @@ build {
     source      = "./packer/verifystart.sh"
     destination = "/tmp/verifystart.sh"
   }
-
+  
   provisioner "file" {
     source      = "./packer/config.yaml"
     destination = "/etc/google-cloud-ops-agent/config.yaml"
   }
-  
+
   provisioner "shell" {
     scripts          = ["./packer/installer.sh", "./packer/create-user.sh", "./packer/startserver.sh"]
     valid_exit_codes = [0, 2300218]
