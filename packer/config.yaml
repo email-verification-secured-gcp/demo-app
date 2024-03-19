@@ -13,7 +13,7 @@ logging:
       type: modify_fields
       fields:
         severity:
-          move_from: jsonPayload.message.level
+          move_from: jsonPayload.level
   service:
     pipelines:
       webapp:
