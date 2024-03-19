@@ -8,13 +8,12 @@ logging:
     parse_json:
       type: parse_json
       time_key: jsonPayload.message.timestamp
-      time_format: RFC3339
-      target: ""
+      time_format: "%Y-%m-%dT%H:%M:%S.%L%Z"
     move_severity:  
-      type: extract_structured
-      field: jsonPayload.message
-      mappings:
-        severity: level
+      type: parse_regex
+      regex: '"level":"([^"]*)"'
+      source: jsonPayload.message
+      target: severity
   service:
     pipelines:
       webapp:
