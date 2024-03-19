@@ -7,13 +7,14 @@ logging:
   processors:
     parse_json:
       type: parse_json
-      time_key: time
-      time_format: "%Y-%m-%dT%H:%M:%S.%L%Z"
+      time_key: jsonPayload.message.timestamp
+      time_format: RFC3339
+      target: ""
     move_severity:  
-      type: modify_fields
-      fields:
-        severity:
-          move_from: jsonPayload.message.level
+      type: extract_structured
+      field: jsonPayload.message
+      mappings:
+        severity: level
   service:
     pipelines:
       webapp:
