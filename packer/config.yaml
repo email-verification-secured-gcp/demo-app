@@ -5,13 +5,17 @@ logging:
       include_paths:
       - /var/log/webapp.log
   processors:
-    move_severity:
+    parse_json:
+      type: parse_json
+      time_key: time
+      time_format: "%Y-%m-%dT%H:%M:%S.%L%Z"
+    move_severity:  
       type: modify_fields
       fields:
         severity:
-          move_from: jsonPayload.severity
+          move_from: jsonPayload.message.level
   service:
     pipelines:
       webapp:
         receivers: [webapp]
-        processors: [move_severity]
+        processors: [parse_json,move_severity]
