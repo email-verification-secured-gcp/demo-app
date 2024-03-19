@@ -93,7 +93,7 @@ build {
       "DB_PASSWORD=${var.DB_PASSWORD}"
     ]
   }
-   provisioner "file" {
+  provisioner "file" {
     source      = "./packer/config.yaml"
     destination = "/etc/google-cloud-ops-agent/config.yaml"
   }
