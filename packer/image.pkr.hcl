@@ -85,7 +85,7 @@ build {
     source      = "./packer/verifystart.sh"
     destination = "/tmp/verifystart.sh"
   }
-  
+
   provisioner "file" {
     source      = "./packer/config.yaml"
     destination = "/etc/google-cloud-ops-agent/config.yaml"
@@ -99,6 +99,6 @@ build {
       "DB_PASSWORD=${var.DB_PASSWORD}"
     ]
   }
-  
+
 }
 
