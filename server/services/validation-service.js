@@ -11,7 +11,7 @@ export const  isVerifiedUser = async (req, res, next) => {
     const credentials = await basicAuth(req);
     try {
         if (!credentials || ! await check(credentials.name, credentials.pass)) {
-            logger.error("Invalid user",credentials.name);
+            logger.error(`Invalid user:${credentials.name}`);
             res.status(401).send();
         }
         else {
@@ -46,7 +46,7 @@ async function check(username, password) {
 export const validateUserInput = async (req, res, next) => {
     const { first_name, last_name, password, username } = req.body;
     if (!first_name || !last_name || !password || !username ||  !isValidEmail(username)) {
-        logger.error("Invalid user input sent",req.body);
+        logger.error(`Invalid user input sent,${JSON.stringify(req.body)}`);
         return res.status(400).send();
     }
 
@@ -61,7 +61,7 @@ export const validateUserInput = async (req, res, next) => {
 export const validatePayload = async (req, res, next) => {
 
     if (Object.keys(req.body).length > 0 || Object.keys(req.query).length > 0) {
-        logger.error("Invalid user input sent",req.body);
+        logger.error(`Invalid user input sent,${JSON.stringify(req.body)}`);
         res.status(400).send();
     }
     next();
@@ -73,7 +73,7 @@ export const validateUpdatePayload = async(req,res,next) =>{
     const { first_name, last_name, password } = req.body;
 
     if (Object.keys(req.body).length>3 || !first_name || !last_name || !password ) {
-        logger.error("Invalid user input sent",req.body);
+        logger.error(`Invalid user input sent,${JSON.stringify(req.body)}`);
         return res.status(400).send();
     }
     req.body.password = await generateHash(password);
