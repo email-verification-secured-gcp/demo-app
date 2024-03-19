@@ -1,0 +1,17 @@
+logging:
+  receivers:
+    webapp:
+      type: files
+      include_paths:
+      - /var/log/webapp.log
+  processors:
+    move_severity:
+      type: modify_fields
+      fields:
+        severity:
+          move_from: jsonPayload.severity
+  service:
+    pipelines:
+      webapp:
+        receivers: [webapp]
+        processors: [move_severity]
