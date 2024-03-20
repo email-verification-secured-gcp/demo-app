@@ -14,8 +14,6 @@ logging:
       fields:
         severity:
           copy_from: jsonPayload.level
-        timestamp:
-          copy_from: jsonPayload.timestamp
   service:
     pipelines:
       webapp:
