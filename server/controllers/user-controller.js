@@ -17,7 +17,7 @@ export const getUser = async (req, res) => {
         res.status(400).json({ message: 'User not found' });
       }
     } catch (error) {
-      console.error('Error in getUser controller:', error);
+      logger.error('Error in getUser controller:', error);
       res.status(503).send();
     }
   };
