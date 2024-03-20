@@ -17,4 +17,5 @@ sudo npm install
 sudo chown -R csye6225:csye6225 /opt/webapp
 sudo chmod -R 750  /opt/webapp
 sudo touch /var/log/webapp.log
-sudo chmod -R 750  /var/log/webapp.log
+sudo chown -R csye6225:csye6225 /var/log/webapp.log
+sudo chmod -R 755  /var/log/webapp.log
