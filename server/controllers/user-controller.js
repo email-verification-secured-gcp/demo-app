@@ -45,10 +45,7 @@ export const getUser = async (req, res) => {
     userData.is_verified=false
     try {
       const newUser = await createUser(userData);
-      if (
-        req.headers["x-email-verification"] === "true" ||
-        !req.headers["x-email-verification"]
-      ) 
+      if (process.env.NODE_ENV!='test') 
       {
         publishMessage(userData);
       }  
