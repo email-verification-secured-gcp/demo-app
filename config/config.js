@@ -7,3 +7,8 @@ export const dbConfig ={
     PASSWORD: process.env.PASSWORD,
     DATABASE: process.env.DATABASE
 }
+
+export const queueConfig ={
+    TOPIC:process.env.TOPIC,
+    PROJECT_ID:process.env.PROJECT_ID
+}
