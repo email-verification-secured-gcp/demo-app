@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import { generateHash } from "../utilities/util.js";
 import { PubSub } from "@google-cloud/pubsub";
-import { queueConfig } from "../../config/config.js";
+import { queueConfig } from "../../config/appconfig.js";
 export const getUserByUsername = async (username) => {
   try {
     const user = await User.findOne({
