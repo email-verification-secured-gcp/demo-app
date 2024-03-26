@@ -29,7 +29,7 @@ async function check(username, password) {
         const user = await User.findOne({
             where: { username: username },
         });
-        if (user && await comparePassword(password, user.password)) {
+        if (user && await comparePassword(password, user.password) && user.is_verified) {
             return true;
         }
         else {
@@ -45,7 +45,7 @@ async function check(username, password) {
 
 export const validateUserInput = async (req, res, next) => {
     const { first_name, last_name, password, username } = req.body;
-    if (!first_name || !last_name || !password || !username ||  !isValidEmail(username)) {
+    if (!first_name || !last_name || !password || !username ||!isValidEmail(username)) {
         logger.error(`Invalid user input sent,${JSON.stringify(req.body)}`);
         return res.status(400).send();
     }
