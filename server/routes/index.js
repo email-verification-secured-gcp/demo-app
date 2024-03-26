@@ -4,5 +4,5 @@ import veirfyRouter from "./verify-route.js";
 export default (app) => {
     app.use('/healthz',healthRouter);
     app.use('/v1/user',userRouter);
-    app.use('/verify',veirfyRouter);
+    app.use('/verify-email',veirfyRouter);
 }   
