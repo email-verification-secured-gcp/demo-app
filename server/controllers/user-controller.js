@@ -10,6 +10,7 @@ export const getUser = async (req, res) => {
       const user = await getUserByUsername(name);
       if (user) {
         delete user.password;
+        delete user.is_verified;
         logger.info(`User successfully found:${user.username}`);
         res.status(200).send(user);
       } else {
