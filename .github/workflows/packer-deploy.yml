@@ -73,10 +73,14 @@ jobs:
         
     - name: Install dependencies
       run: npm install
+      env:  
+        NODE_ENV: test
     
     - name: Start the application
       run: |
         npm start &
+      env:  
+        NODE_ENV: test
     
     - name: Wait for the application to be ready
       run: |
@@ -87,6 +91,8 @@ jobs:
 
     - name: run test
       run: npm test
+      env:  
+        NODE_ENV: test
 
 
 
