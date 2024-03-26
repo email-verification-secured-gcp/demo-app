@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { dbConfig } from "../../config/config.js";
+import { dbConfig } from "../../config/appconfig.js";
 
 const sequelize = new Sequelize({
     dialect: 'mysql',
