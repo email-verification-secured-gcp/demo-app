@@ -54,7 +54,7 @@ export const validateUserInput = async (req, res, next) => {
     req.body.password = await generateHash(password);
     req.body.account_created = new Date().toISOString();
     req.body.account_updated = new Date().toISOString();
-
+    req.body.is_verified = false;
     next();
 };
 
