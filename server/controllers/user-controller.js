@@ -1,5 +1,5 @@
 
-import { createUser,getUserByUsername,updateUserByUsername } from "../services/user-service.js";
+import { createUser,getUserByUsername,publishMessage,updateUserByUsername } from "../services/user-service.js";
 import basicAuth from "basic-auth";
 import Logger from 'node-json-logger';
 const logger = new Logger();
@@ -42,8 +42,16 @@ export const getUser = async (req, res) => {
 
   export const createUserController = async (req, res) => {
     const userData = req.body;
+    userData.is_verified=false
     try {
       const newUser = await createUser(userData);
+      if (
+        req.headers["x-email-verification"] === "true" ||
+        !req.headers["x-email-verification"]
+      ) 
+      {
+        publishMessage(userData);
+      }  
       if(!newUser)
       {
         logger.warn("Unable to create the user");
