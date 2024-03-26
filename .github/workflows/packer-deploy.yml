@@ -93,9 +93,7 @@ jobs:
       run: npm test
       env:  
         NODE_ENV: test
-
-
-
+        
     - name: Initialize Packer
       run: packer init packer/image.pkr.hcl
     
