@@ -13,8 +13,8 @@ export const verifyEmail= async(req,res)=>{
         }
         const timestamp = new Date(emailDetails.timestamp);
         const currentTime = Date.now();
-        logger.log("Received timestamp for email validation",timestamp);
-        logger.log("current timestamp for email validation",currentTime);
+        logger.info("Received timestamp for email validation",timestamp);
+        logger.info("current timestamp for email validation",currentTime);
         if (currentTime - timestamp <= 120000) {
             const user = await User.findOne({
                 where: { username: emailDetails.email },
