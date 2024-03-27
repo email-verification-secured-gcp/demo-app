@@ -4,11 +4,11 @@ import email from "../models/email.js";
 import User from '../models/User.js';
 
 export const verifyEmail= async(req,res)=>{
-
-    const id =req.params.token
+    const id =req.query.token;
     try {
-        const emailDetails = await email.findById(id);
+        const emailDetails = await email.findByPk(id);
         if (!emailDetails) {
+            logger.log("email not found for :",id);
             return res.status(404).json({ error: "Email not found" });
         }
         const timestamp = new Date(emailDetails.timestamp);
@@ -27,7 +27,7 @@ export const verifyEmail= async(req,res)=>{
             return res.status(400).json({ error: "Link expired" });
         }
     } catch (error) {
-    logger.error(error); 
+    logger.error(error.toString()); 
     return res.status(500).json({ error: "Internal server error" });
 }
 
