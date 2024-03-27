@@ -11,6 +11,11 @@ export const verifyEmail= async(req,res)=>{
             logger.log("email not found for :",id);
             return res.status(404).json({ error: "Email not found" });
         }
+        if(emailDetails.is_verified)
+        {
+            logger.log("email already verified for :",id);
+            return res.status(409).json({ error: "Email already verified" });
+        }
         const timestamp = new Date(emailDetails.timestamp);
         const currentTime = Date.now();
         logger.info("Received timestamp for email validation",timestamp);
@@ -20,6 +25,8 @@ export const verifyEmail= async(req,res)=>{
                 where: { username: emailDetails.email },
               });
             user.is_verified=true;
+            emailDetails.is_verified= true;
+            await emailDetails.save();
             await user.save();
             return res.status(200).json({ message: "Verification successful" });
         }
