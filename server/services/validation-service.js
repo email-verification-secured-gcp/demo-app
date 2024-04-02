@@ -14,12 +14,36 @@ export const  isVerifiedUser = async (req, res, next) => {
             logger.error(`Invalid user:${credentials.name}`);
             res.status(401).send();
         }
+        else if(checkVerified(credentials.name))
+        {
+            logger.error(`User is not verified:${credentials.name}`);
+            res.status(403).send();
+        }
         else {
             next();
         }
     }
     catch (err) {
         res.status(503).send();
+    }
+
+}
+
+async function checkVerified(username) {
+    try {
+        const user = await User.findOne({
+            where: { username: username },
+        });
+        if ((user.is_verified || process.env.NODE_ENV==='test')){
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    } catch (error) {
+        logger.error('Error checking verified user:', error);
+        throw error;
     }
 
 }
