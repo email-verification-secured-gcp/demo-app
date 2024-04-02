@@ -46,15 +46,15 @@ export const getUser = async (req, res) => {
     userData.is_verified=false
     try {
       const newUser = await createUser(userData);
-      if (process.env.NODE_ENV!='test') 
-      {
-        publishMessage(userData);
-      }  
       if(!newUser)
       {
         logger.warn("Unable to create the user");
         return res.status(400).send();
       }
+      if (process.env.NODE_ENV!='test') 
+      {
+        publishMessage(userData);
+      }  
       logger.info(`User successfully created:${newUser.username}`);
       return res.status(201).json(newUser);
     } catch (error) {
