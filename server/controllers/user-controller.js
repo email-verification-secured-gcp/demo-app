@@ -51,7 +51,7 @@ export const getUser = async (req, res) => {
         logger.warn("Unable to create the user");
         return res.status(400).send();
       }
-      if (process.env.NODE_ENV!='test') 
+      if (process.env.NODE_ENV!='test' && newUser) 
       {
         publishMessage(userData);
       }  
