@@ -132,7 +132,7 @@ jobs:
         --service-account=${{ secrets.SERVICE_ACCOUNT }} \
         --network=${{ secrets.VPC_NETWORK }} \
         --subnet=${{ secrets.SUBNET }} \
-        --instance-template-region=${{ secrets.REGION }}
+        --instance-template-region=${{ secrets.REGION }} \
         --metadata=startup-script="## Download secrets file and place it in /opt/webapp/secrets
         mkdir -p /opt/webapp/secrets
         rm -f /opt/webapp/secrets/secrets.env && echo \"HOST=${{ secrets.PROD_HOST }}\" > /opt/webapp/secrets/secrets.env
