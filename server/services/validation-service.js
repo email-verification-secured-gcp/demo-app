@@ -47,7 +47,7 @@ async function checkVerified(username) {
         }
 
     } catch (error) {
-        logger.error('Error checking verified user:', error);
+        logger.error('Error checking verified user', error);
         throw error;
     }
 
