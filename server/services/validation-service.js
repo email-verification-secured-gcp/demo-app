@@ -13,16 +13,16 @@ export const  isVerifiedUser = async (req, res, next) => {
         if(!credentials)
         {
             logger.error(`No input authorization given`);
-            res.status(401).send();
+            return res.status(401).send();
         }
-        else if(!credentials || !checkVerified(credentials.name))
+        else if(!credentials || ! await checkVerified(credentials.name))
         {
             logger.error(`User is not verified:${credentials.name}`);
-            res.status(403).send();
+            return res.status(403).send();
         }
         if (!credentials || ! await check(credentials.name, credentials.pass)) {
             logger.error(`Invalid user:${credentials.name}`);
-            res.status(401).send();
+            return res.status(401).send();
         }
         else {
             next();
