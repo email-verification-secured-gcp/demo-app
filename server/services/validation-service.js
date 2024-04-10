@@ -17,7 +17,7 @@ export const  isVerifiedUser = async (req, res, next) => {
         }
         else if(!credentials || ! await checkVerified(credentials.name))
         {
-            logger.error(`User is not verified:${credentials.name}`);
+            logger.error(`Given User is not verified:${credentials.name}`);
             return res.status(403).send();
         }
         if (!credentials || ! await check(credentials.name, credentials.pass)) {
