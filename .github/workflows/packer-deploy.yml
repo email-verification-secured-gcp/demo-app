@@ -148,7 +148,7 @@ jobs:
       run: |    
         RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
         TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"   
-        gcloud compute instance-groups managed rolling-action start-update instance-group-manager --version="template=projects/${{ secrets.GCP_PROJECT_ID }}/regions/${{ secrets.REGION }}/instanceTemplates/$TEMPLATE_NAME" --region=${{ secrets.REGION }}   
+        gcloud compute instance-groups managed rolling-action start-update instance-group-manager --version="template=projects/${{ secrets.PROJECT_ID }}/regions/${{ secrets.REGION }}/instanceTemplates/$TEMPLATE_NAME" --region=${{ secrets.REGION }}   
 
     - name: Wait for Managed Instance Group refresh to complete
       run: |    
