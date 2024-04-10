@@ -159,6 +159,11 @@ jobs:
     - name: Check healthy status of machines
       run: |
         sudo apt-get install jq
-        gcloud compute instance-groups managed list-instances instance-group-manager \
+        healthy_instance_count=$(gcloud compute instance-groups managed list-instances instance-group-manager \
         --region=us-west4 --format=json | \
-        jq -r 'if [.[] | select(.instanceHealth[].detailedHealthState == "HEALTHY")] | length >= 3 then exit 0 else exit 1 end'
+        jq '[.[] | select(.instanceHealth[].detailedHealthState == "HEALTHY")] | length')
+        if [[ $healthy_instance_count -ge 3 ]]; then
+          exit 0  
+        else
+          exit 1  
+        fi
