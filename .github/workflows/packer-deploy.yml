@@ -155,3 +155,10 @@ jobs:
         gcloud compute instance-groups managed wait-until instance-group-manager \
         --version-target-reached \
         --region=${{ secrets.REGION }}
+
+    - name: Check healthy status of machines
+      run: |
+        sudo apt-get install jq
+        gcloud compute instance-groups managed list-instances instance-group-manager \
+        --region=us-west4 --format=json | \
+        jq -r 'if [.[] | select(.instanceHealth[].detailedHealthState == "HEALTHY")] | length >= 3 then exit 0 else exit 1 end'
