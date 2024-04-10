@@ -1,7 +1,7 @@
 name: packer deployment
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -104,6 +104,11 @@ jobs:
     - name: Validate Packer Template
       run: packer validate packer/image.pkr.hcl
     
+    - name: Generate Random ID
+      id: generate_random_id
+      run: |
+        RANDOM_ID=$(date +%s | md5sum | head -c 6)
+        echo "::set-output name=random_id::$RANDOM_ID"
 
     - name: Deploy packer image
       env:
@@ -111,3 +116,42 @@ jobs:
          DB_USER: ${{secrets.USERNAME}}     
       run: |
           packer build -var 'project=${{ secrets.PROJECT_ID }}' packer/image.pkr.hcl
+    
+    - name: Create new Instance Template version
+      run: |
+        RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
+        TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
+        IMAGE_ID=$(gcloud compute images list --no-standard-images --format="table(NAME,CREATION_TIMESTAMP)" --sort-by="CREATION_TIMESTAMP" | tail -n 1)
+        IMAGE_NAME="projects/${{ secrets.PROJECT_ID }}/global/images/${IMAGE_ID}"
+        gcloud compute instance-templates create $TEMPLATE_NAME \
+        --machine-type=${{ secrets.MACHINE_TYPE }} \
+        --region=${{ secrets.REGION }} \
+        --create-disk=image=$IMAGE_NAME,size=${{ secrets.DISK_SIZE }},type=${{ secrets.DISK_TYPE }},boot=yes,auto-delete=yes,kms-key=projects/${{ secrets.PROJECT_ID }}/locations/${{ secrets.REGION }}/keyRings/${{ secrets.KEY_NAME }}/cryptoKeys/vm-key \
+        --tags=${{ secrets.TARGET_TAGS_HTTP }} \
+        --scopes=${{ secrets.SCOPES }} \
+        --service-account=${{ secrets.SERVICE_ACCOUNT }} \
+        --network=${{ secrets.VPC_NETWORK }} \
+        --subnet=${{ secrets.SUBNET }} \
+        --instance-template-region=${{ secrets.REGION }}
+        --metadata=startup-script="## Download secrets file and place it in /opt/webapp/secrets
+        mkdir -p /opt/webapp/secrets
+        rm -f /opt/webapp/secrets/secrets.env && echo \"HOST=${{ secrets.PROD_HOST }}\" > /opt/webapp/secrets/secrets.env
+        echo \"USERNAME=${{ secrets.PROD_USER }}\" >> /opt/webapp/secrets/secrets.env
+        echo \"PASSWORD=${{ secrets.PROD_PASS }}\" >> /opt/webapp/secrets/secrets.env
+        echo \"DATABASE=${{ secrets.PROD_DATABASE }}\">> /opt/webapp/secrets/secrets.env
+        echo \"startup=true\" >> /opt/webapp/secrets/secrets.env
+        echo \"TOPIC=${{ secrets.PROD_TOPIC }}\" >> /opt/webapp/secrets/secrets.env
+        echo \"PROJECT_ID=${{ secrets.PROJECT_ID }}\" >> /opt/webapp/secrets/secrets.env
+        sudo systemctl start node" 
+  
+    - name: Start set and rolling update for Managed Instance Group
+      run: |    
+        RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
+        TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"   
+        gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version="template=projects/${{ secrets.GCP_PROJECT_ID }}/regions/${{ secrets.REGION }}/instanceTemplates/$TEMPLATE_NAME" --region=${{ secrets.REGION }}   
+
+    - name: Wait for Managed Instance Group refresh to complete
+      run: |    
+        gcloud compute instance-groups managed wait-until webapp-instance-group-manager \
+        --version-target-reached \
+        --region=${{ secrets.REGION }}
