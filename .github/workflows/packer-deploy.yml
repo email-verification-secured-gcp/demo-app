@@ -162,7 +162,7 @@ jobs:
         healthy_instance_count=$(gcloud compute instance-groups managed list-instances instance-group-manager \
         --region=us-west4 --format=json | \
         jq '[.[] | select(.instanceHealth[].detailedHealthState == "HEALTHY")] | length')
-        if [[ $healthy_instance_count -ge 3 ]]; then
+        if [[ $healthy_instance_count -ge ${{secrets.HEALTH_COUNT}} ]]; then
           exit 0  
         else
           exit 1  
