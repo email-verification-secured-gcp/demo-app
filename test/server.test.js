@@ -8,12 +8,12 @@ const client = axios.create({
   });
 
 
-  describe('/v1/user post,get,put',  () => {
+  describe('/v2/user post,get,put',  () => {
 
     it('create account and verify', async () => {
 
         const token = Buffer.from(`shoba123@gmail.com:abc1`, 'utf8').toString('base64')
-        const response = await client.post('/v1/user', {
+        const response = await client.post('/v2/user', {
             "first_name": "Jane",
             "last_name": "Doe",
             "password": "abc1",
@@ -22,7 +22,7 @@ const client = axios.create({
         expect(response.status).toBe(201);
         expect(response.data).toHaveProperty('username');
         userId = response.data.userId;        
-        const res = await client.get('/v1/user/self',{
+        const res = await client.get('/v2/user/self',{
             headers:{
                 'Authorization': `Basic ${token}`
             }
@@ -33,7 +33,7 @@ const client = axios.create({
 
      it('update account and validate it updated', async () => {
         const token = Buffer.from(`shoba123@gmail.com:abc1`, 'utf8').toString('base64')
-        const response = await client.put('/v1/user/self', {
+        const response = await client.put('/v2/user/self', {
             "first_name": "Jack",
             "last_name": "Sparrow",
             "password": "abc1",
@@ -44,7 +44,7 @@ const client = axios.create({
         });
         expect(response.status).toBe(204);
         userId = response.data.userId;        
-        const res = await client.get('/v1/user/self',{
+        const res = await client.get('/v2/user/self',{
             headers:{
                 'Authorization': `Basic ${token}`
             }
