@@ -1,94 +1,193 @@
 ![project](https://github.com/user-attachments/assets/8b1cadec-5a77-44ab-8a70-ac9738c10eae)
 
+# Email User Verification App
 
+This application provides core functionalities for email user verification, including creating, retrieving, and updating user data, as well as publishing messages to Cloud Pub/Sub for verification purposes.
 
-# Web Application for Node.js and MySQL
+## Features
 
-This web application is a RESTful API built with Node.js and MySQL. The API adheres to certain standards and follows, specific requirements outlined below.
+1. **Get User Information**
+   - Retrieves user data by username (Basic Auth).
+   - Omits sensitive information like password and verification status in the response.
+   - Logs success and failure scenarios.
 
-## RESTful API Requirements
+2. **Update User Information**
+   - Updates user data based on the provided username and request body.
+   - Logs success, failure, and potential issues.
 
-- All API request/response payloads must be in JSON format.
-- Proper HTTP status codes should be returned for each API call.
-- Code quality is a priority, and the application should maintain the highest standards. Unit and/or integration tests are recommended.
+3. **Create New User**
+   - Creates a new user with default verification status set to `false`.
+   - Publishes a message for verification purposes unless running in a test environment.
+   - Logs success and failure scenarios.
 
-## Authentication Requirements
+---
 
-- Token-Based authentication is mandatory.
-- The application must not support Session Authentication.
-- Users are required to provide a basic authentication token for authenticated endpoints.
+## API Endpoints
 
-## Implemented APIs
+### 1. **Get User**
+**Endpoint:** `/v2/user`  
+**Method:** `GET`  
+**Authentication:** Basic Auth (Username and Password required)
 
-### Swagger Docs
+**Functionality:**
+- Retrieves user details by username.
+- Returns 200 status with user details on success.
+- Returns 400 status if the user is not found.
+- Logs information on success or failure.
 
-Visit the Swagger Docs endpoint for comprehensive API documentation.
+### 2. **Update User**
+**Endpoint:** `/v2/user`  
+**Method:** `PUT`  
+**Authentication:** Basic Auth (Username and Passwordrequired)
 
-### Create a New User
+**Functionality:**
+- Updates user data with the details provided in the request body.
+- Returns 204 status on successful update.
+- Returns 404 status if the user is not found or no changes are made.
+- Logs the result of the update process.
 
-- Users can create an account by providing the following information:
-  - Email Address
-  - Password
-  - First Name
-  - Last Name
-- `account_created` is set to the current time upon successful user creation.
-- Users cannot set values for `account_created` and `account_updated`.
-- Password is never returned in the response payload.
-- Email address serves as the username.
-- Application returns a 400 Bad Request HTTP response code when a user with the given email address already exists.
-- Passwords are securely stored using the BCrypt password hashing scheme with salt.
+### 3. **Create User**
+**Endpoint:** `/v2/user`  
+**Method:** `POST`  
 
-### Update User Information
+**Functionality:**
+- Creates a new user with the provided details and default `is_verified: false`.
+- Publishes a message for verification unless in the test environment.
+- Returns 201 status with the newly created user on success.
+- Returns 400 status if user creation fails.
+- Logs the result of the creation process.
 
-- Users can update their account information with the following fields:
-  - First Name
-  - Last Name
-  - Password
-- Attempting to update any other field results in a 400 Bad Request HTTP response code.
-- `account_updated` is updated upon successful user information update.
-- Users can only update their own account information.
+---
 
-### Get User Information
+## Logging
+This application uses `node-json-logger` for structured logging. Logs are categorized as follows:
+- **Info:** Indicates successful operations (e.g., user found, user created, user updated).
+- **Warn:** Highlights non-critical issues (e.g., user not found, unable to update).
+- **Error:** Captures critical issues that disrupt functionality.
 
-- Users can retrieve their account information.
-- Response payload includes all user fields except for the password.
+---
 
-## Authentication Process
+## Environment Variables
+- `NODE_ENV`: Determines the environment in which the application is running. If set to `test`, publishing messages is skipped.
 
-- Users must provide a basic authentication token for authenticated endpoints.
+---
 
-## Usage
+## Setup and Installation
 
-1. **Clone the repository:**
-
+1. Clone the repository:
    ```bash
-   git clone <repository_url>
+   git clone <repository-url>
+   ```
 
-
-2. **Install node packages:**
-    ```bash
+2. Install dependencies:
+   ```bash
    npm install
+   ```
+
+3. Configure environment variables in a `.env` file:
+   ```env
+   NODE_ENV=development
+   ```
+
+4. Run the application:
+   ```bash
+   npm start
+   ```
+
+5. For testing purposes:
+   ```bash
+   npm test
+   ```
+
+---
+
+## Service Dependencies
+- **User Service**: Provides core functions for interacting with user data:
+  - `createUser`
+  - `getUserByUsername`
+  - `publishMessage`
+  - `updateUserByUsername`
+
+- **Basic Auth**: Used for user authentication based on username.
+
+- **Logger**: `node-json-logger` for structured log management.
+
+---
+
+## Error Handling
+- The application employs structured error handling with appropriate HTTP status codes:
+  - `200 OK`: Success responses for GET operations.
+  - `204 No Content`: Successful updates.
+  - `400 Bad Request`: Invalid input or user-related errors.
+  - `404 Not Found`: Resource not found.
+  - `503 Service Unavailable`: Internal service issues.
+
+---
+
+## Continuous Integration and Deployment Workflow
+
+This project uses a robust GitHub Actions workflow to ensure a streamlined CI/CD process. Below are the key components and how they enhance the project's functionality:
+
+### 1. **Packer Integration**
+Packer automates the creation of custom machine images for GCP (Google Cloud Platform) with all necessary dependencies and configurations pre-installed. This ensures consistency across deployments and eliminates manual setup steps.
+
+#### Key Features of Packer in This Workflow:
+- **Custom Image Creation**: Builds GCP images based on the `packer/image.pkr.hcl` template, which includes:
+  - Pre-configured operating system (`centos-stream-8` by default).
+  - Uploaded application files (`webapp.zip`) and configuration files.
+  - Environment variables for database access (`DB_USER`, `DB_PASSWORD`).
+  - Pre-installed dependencies and application setup.
+- **Validation**: Ensures the Packer template is correctly formatted and valid before execution.
+- **Timestamped Images**: Dynamically names images using timestamps to avoid conflicts and ensure traceability.
+- **Efficient Deployment**: Once built, these images are used to create and update GCP instance templates, providing a consistent and reliable deployment environment.
+
+#### Benefits:
+- **Reliability**: Ensures all instances run the same configuration.
+- **Scalability**: Easily replicates images across multiple instances.
+- **Efficiency**: Reduces manual configuration and potential errors.
+
+---
+
+### 2. **GitHub Actions CI/CD Workflow**
+The GitHub Actions workflow automates key stages of the development and deployment process. Below are the critical steps included in the workflow:
+
+#### Key Workflow Steps:
+1. **Code Checkout**:
+   - Ensures the latest version of the code is available for build and testing.
+
+2. **Google Cloud Authentication**:
+   - Authenticates the workflow with GCP using service account credentials stored securely as GitHub secrets.
+
+3. **Packer Setup and Validation**:
+   - Installs and initializes Packer to create custom GCP images.
+   - Validates the image template to prevent configuration errors.
+
+4. **Database Setup**:
+   - Sets up a MySQL database, creates users, and grants privileges for the application.
+
+5. **Environment Configuration**:
+   - Exports environment variables from GitHub secrets for use during the build process.
+
+6. **Application Build and Testing**:
+   - Installs Node.js dependencies.
+   - Runs unit tests to validate the application functionality.
+
+7. **Custom Image Build**:
+   - Uses Packer to build a GCP machine image pre-configured with the application.
+
+8. **Instance Template Deployment**:
+   - Creates a new GCP instance template based on the custom image.
+   - Includes startup scripts for initializing the application on instance creation.
+
+9. **Managed Instance Group Update**:
+   - Deploys the new instance template to a Managed Instance Group.
+   - Initiates a rolling update, ensuring minimal downtime.
+
+10. **Deployment Monitoring**:
+    - Waits for the instance group to complete the rolling update and reach the desired state.
 
 
-3. **Mysql - Database creation & user creation:**
 
-```sql
-show databases;
 
-create database "databasename";
 
-CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
 
-GRANT ALL PRIVILEGES ON database.* TO 'dada'@'localhost';
-
-SHOW GRANTS FOR 'user'@'localhost';
-
-DROP USER 'user'@'localhost';
-
-FLUSH PRIVILEGES;
-```
-
-4. **Start application**
-
-    ```bash
-    npm start;
