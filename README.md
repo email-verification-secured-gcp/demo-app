@@ -1,3 +1,7 @@
+![project](https://github.com/user-attachments/assets/8b1cadec-5a77-44ab-8a70-ac9738c10eae)
+
+
+
 # Web Application for Node.js and MySQL
 
 This web application is a RESTful API built with Node.js and MySQL. The API adheres to certain standards and follows, specific requirements outlined below.
